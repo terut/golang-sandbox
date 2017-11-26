@@ -6,10 +6,6 @@ import (
 	e "github.com/pkg/errors"
 )
 
-type stackTracer interface {
-	StackTrace() e.StackTrace
-}
-
 func New(msg string) error {
 	return e.New(msg)
 }
@@ -23,6 +19,10 @@ func Cause(err error) error {
 }
 
 func StackTrace(err error) string {
+	type stackTracer interface {
+		StackTrace() e.StackTrace
+	}
+
 	t, ok := Cause(err).(stackTracer)
 	if !ok {
 		return err.Error()
